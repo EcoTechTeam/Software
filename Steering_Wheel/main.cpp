@@ -51,9 +51,10 @@ int main(void){
 
 				//ramka nie adresowana do tego uC lub błędna.
 			}
-
-			frameOUT=frameIN; //w tym wypadku wysyłam echo
+			//############################
+			frameOUT=frameIN; //w tym wypadku tylko do testu wysyłam echo 
 			sendFrame(frameOUT);
+			//############################
 		}
 		if( shallSendButtonState  && button1){ //przycisk trzymany
 
