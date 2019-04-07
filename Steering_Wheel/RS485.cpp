@@ -96,7 +96,7 @@ ISR(USART_RXC_vect){
 
 		buff.bytes[i++]=temp;
 	}
-	TCNT2 =0; //reset timera0
+	TCNT2 =0; //reset timera2
 	TCCR2|=(1<<CS00)|(1<<CS02); //wznowienie timera2
 
 }
@@ -104,7 +104,7 @@ ISR(USART_RXC_vect){
 ISR(USART_TXC_vect){
 	 if(isQueEmpty(bytesBuffer))
 	    {
-		 TCNT2 =0; //reset timera0
+		 TCNT2 =0; //reset timera2
 		 TCCR2|=(1<<CS00)|(1<<CS02); //wznowienie  timera2
 
 	    } else{
