@@ -26,32 +26,32 @@ volatile bool busEmpty=false;
 
 
 
-void getFrameReady(const Frame& frame){
+void getFrameReady(Frame *frame){
 	busEmpty=false;
 	if(UCSRA & (1 << UDRE)){ // sprawdzenie czy TX jest wolne, jeśli tak wysyłanie pierwszej wiadomości.
 		UDR = START_BYTE;
 		//todo jest to ryzykowne, bo jeśli ta wiadomość się wyśle przed napełnienem buffora kolejnymi wiadomościami kolene przerwanie USART_RXC_vect nie wypali i wysyłanie wiadomości się przerwie.
 	}else {
-		toQue(bytesBuffer,(uint8_t)START_BYTE);
+		toQueB(&bytesBuffer, START_BYTE);
 	}
 	for(int i=0;i<=FRAME_LENGTH;i++){
 
-		if(frame.bytes[i]==START_BYTE || frame.bytes[i]==STOP_BYTE || frame.bytes[i]==ESCAPE_BYTE){
-			toQue(bytesBuffer,(uint8_t)ESCAPE_BYTE);
+		if(frame->bytes[i]==START_BYTE || frame->bytes[i]==STOP_BYTE || frame->bytes[i]==ESCAPE_BYTE){
+			toQueB(&bytesBuffer, ESCAPE_BYTE);
 		}
-		toQue(bytesBuffer,frame.bytes[i]);
+		toQueB(&bytesBuffer,frame->bytes[i]);
 	}
-	toQue(bytesBuffer,(uint8_t)STOP_BYTE);
+	toQueB(&bytesBuffer, STOP_BYTE);
 
 }
 
-void sendFrame(const Frame& frame){
+void sendFrame(Frame *frame){
 	if(busEmpty){
 		getFrameReady(frame);
-	}else if(isQueFull(framesToSend)){
+	}else if(isQueFullF(&framesToSend)){
 		//todo kolejka ramek do wysłania jest pełna.
 	} else{
-		toQue(framesToSend,frame);
+		toQueF(&framesToSend, frame);
 	}
 }
 
@@ -74,10 +74,10 @@ ISR(USART_RXC_vect){
 	} else if(i==FRAME_LENGTH){
 		if(temp==STOP_BYTE){
 			i=-1;
-			if(isQueFull(framesReceived)){
+			if(isQueFullF(&framesReceived)){
 				//todo Nie wiem co jak uC nie będzie nadążać z ogarnianiem ramka.
 			} else{
-				toQue(framesReceived,buff);
+				toQueF(&framesReceived, &buff);
 			}
 
 		}else{
@@ -102,23 +102,25 @@ ISR(USART_RXC_vect){
 }
 
 ISR(USART_TXC_vect){
-	 if(isQueEmpty(bytesBuffer))
+	 if(isQueEmptyB(&bytesBuffer))
 	    {
 		 TCNT2 =0; //reset timera2
 		 TCCR2|=(1<<CS00)|(1<<CS02); //wznowienie  timera2
 
 	    } else{
-	    	UDR = fromQue(bytesBuffer);
+	    	UDR = fromQueB(&bytesBuffer);
 	    }
 
 }
+
 ISR(TIMER2_COMP_vect){  //Timer liczy czas od ostatniej wiadomosci na magistrali i odpala to przerwanie kiedy minął wymagany czas pomiedzy wiadomosciami
-	if(isQueEmpty(framesToSend)){
+	if(isQueEmptyF(&framesToSend)){
 		TCCR2&=!((1<<CS00)|(1<<CS02)); //zatrzymuje timer2
 		TCNT2 =0; // i go resetuje
 		busEmpty=true;
 	} else{
-		getFrameReady(fromQue(framesToSend));
+		Frame f = fromQueF(&framesToSend);
+		getFrameReady(&f);
 	}
 }
 

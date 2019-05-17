@@ -8,7 +8,10 @@
 #ifndef CRC_H_
 #define CRC_H_
 #include "RS485.h"
-void crc8_update(Frame& f);
-bool crc8_check(const Frame& f);
+#include <stdbool.h>
+
+void crc8_update(Frame *f);
+bool crc8_check(Frame *f);
+uint8_t gencrc8(uint8_t* data, uint8_t size);
 
 #endif /* CRC_H_ */

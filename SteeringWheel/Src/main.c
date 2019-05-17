@@ -1,6 +1,3 @@
-#define F_CPU 1000000UL		//taktowanie procesora
-
-
 #include <avr/io.h>
 #include <stdint.h>                     // needed for uint8_t
 #include <avr/interrupt.h>
@@ -15,6 +12,7 @@
 #define ADRESS_OF_ENGINE_uC 'E'
 volatile bool shallSendButtonState=false;
 void timer1Init();
+
 
 int main(void){
 	DDRB&=!(1<<PB2); //pin pb2 jako input.
@@ -42,9 +40,9 @@ int main(void){
 			button1=false;
 		}
 
-		while( !isQueEmpty(framesReceived)){
-			frameIN=fromQue(framesReceived);
-			if(frameIN.adress == ADRESS_OF_THIS_uC  || crc8_check(frameIN)){
+		while( !isQueEmptyF(&framesReceived)){
+			frameIN=fromQueF(&framesReceived);
+			if(frameIN.adress == ADRESS_OF_THIS_uC  || crc8_check(&frameIN)){
 
 				//todo interpretacja danych
 			}else {
@@ -53,7 +51,7 @@ int main(void){
 			}
 			//############################
 			frameOUT=frameIN; //w tym wypadku tylko do testu wysyłam echo 
-			sendFrame(frameOUT);
+			sendFrame(&frameOUT);
 			//############################
 		}
 		if( shallSendButtonState  && button1){ //przycisk trzymany
@@ -62,10 +60,10 @@ int main(void){
 		        	for(int i=0;i<FRAME_LENGTH-2;i++){
 		        		frameOUT.data[i]='X'; //patern który oznacza wciśniety guzik
 		        	}
-		        	crc8_update(frameOUT);
+		        	crc8_update(&frameOUT);
 
 
-		        	sendFrame(frameOUT);
+		        	sendFrame(&frameOUT);
 
 		        	shallSendButtonState=false;
 
@@ -75,9 +73,9 @@ int main(void){
 		    		for(int i=0;i<FRAME_LENGTH-2;i++){
 		    			frameOUT.data[i]='O'; //patern który oznacza puszcznie guzika
 		    		}
-		    		crc8_update(frameOUT);
+		    		crc8_update(&frameOUT);
 
-		    		sendFrame(frameOUT);;
+		    		sendFrame(&frameOUT);;
 
 
 

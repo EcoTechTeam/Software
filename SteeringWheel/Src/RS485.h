@@ -6,16 +6,17 @@
 #define FRAMES_TO_SEND_BUFFER_SIZE 20
 
 
-union Frame{
-	struct{
-
+typedef union
+{
+	struct
+	{
 		uint8_t adress;
 		uint8_t data[FRAME_LENGTH-2];
 		uint8_t crc;
 	};
 	uint8_t bytes[FRAME_LENGTH];
-};
-void sendFrame(const Frame& frame);
+} Frame;
+void sendFrame(Frame *frame);
 void RS485_Init( unsigned int ubrr);
 
 //void USART_sendByte( unsigned char data );

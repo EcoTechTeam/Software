@@ -1,8 +1,10 @@
 #include <stdint.h>
+#include <stdbool.h>
 #include "RS485.h"
+#include "crc.h"
 
 
-uint8_t gencrc8(const uint8_t* const data,uint8_t size)
+uint8_t gencrc8(uint8_t* data,uint8_t size)
 {
     uint8_t crc = 0x8A;
     for (uint8_t i = 0; i < size; i++) {
@@ -17,14 +19,14 @@ uint8_t gencrc8(const uint8_t* const data,uint8_t size)
     return crc;
 }
 
-void crc8_update(Frame& f){
-	   f.crc=gencrc8(f.bytes,FRAME_LENGTH-1);
+void crc8_update(Frame *f){
+	   f->crc=gencrc8(f->bytes, FRAME_LENGTH-1);
 
 
 }
 
-bool crc8_check(const Frame& f){
-	if(gencrc8(f.bytes,FRAME_LENGTH)){
+bool crc8_check(Frame *f){
+	if(gencrc8(f->bytes,FRAME_LENGTH)){
 		return false; //jak crc != od 0, coś poszło nie tak.
 	}else{
 		return true; //jak crc == 0 wszystko się zgadza
