@@ -50,7 +50,7 @@ CLOCK = 8000000
 CORE = atmega8
 CORE_FLAGS = -mmcu=$(CORE) -DF_CPU=$(CLOCK)
 
-OPTIMALIZATION = -O3
+OPTIMIZATION = -O0
 OPTIMIZATION += -ffunction-sections
 C_WARNINGS = -Wall -Wextra -pedantic
 C_STD = c11
@@ -58,6 +58,7 @@ C_FLAGS = -std=$(C_STD) -g
 C_FLAGS_F = $(CORE_FLAGS) $(OPTIMIZATION) $(C_WARNINGS) $(C_FLAGS) -MD -MP -MF $(OUT_DIR_F)$(C_DIR_F)$(@F:.o=.d) $(INC_DIRS_F)
 
 LD_FLAGS = -g -Wl,-Map=$(OUT_DIR_F)$(PROJECT).map,--cref,--no-warn-mismatch
+LD_FLAGS += -Wl,--gc-sections
 LD_FLAGS_F = $(LD_FLAGS) $(CORE_FLAGS)
 
 # Objects
@@ -79,7 +80,7 @@ VPATH = $(SRCS_DIRS)
 # make all
 #=============================================================================#
 
-all : make_output_dir $(ELF) $(HEX) 
+all : make_output_dir $(ELF) $(HEX) print_size 
 
 # make object files dependent on Makefile
 $(OBJS) : Makefile
@@ -114,6 +115,15 @@ $(HEX) : $(ELF)
 	$(OBJCOPY) -j .text -j .data -O ihex $< $@
 	@echo ' '
 
+#-----------------------------------------------------------------------------#
+# print the size of the .elf file
+#-----------------------------------------------------------------------------#
+
+print_size : $(ELF)
+	@echo ' '
+	@echo 'Size of target .elf file:'
+	$(SIZE) -B $(ELF)
+	@echo ' '
 
 #-----------------------------------------------------------------------------#
 # create the desired output directory
