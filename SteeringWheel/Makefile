@@ -16,12 +16,22 @@ PROJECT = SteeringWheel
 
 
 # Includes directories
-INC_DIRS = Test
+INC_DIRS = Drivers/bus
+INC_DIRS += Drivers/button
+INC_DIRS += Drivers/led 
+INC_DIRS += Drivers/timer
+INC_DIRS += Drivers/watchdog
+INC_DIRS += Libraries/message
 INC_DIRS_F = -I. $(patsubst %, -I%, $(INC_DIRS))
 
 # Sources directories
 SRCS_DIRS = Src
-SRCS_DIRS += Test
+SRCS_DIRS += Drivers/bus
+SRCS_DIRS += Drivers/button
+SRCS_DIRS += Drivers/led
+SRCS_DIRS += Drivers/timer
+SRCS_DIRS += Drivers/watchdog
+SRCS_DIRS += Libraries/message
 SRCS_DIRS_F = $(strip $(SRCS_DIRS))
 
 # Extension of C files
