@@ -8,8 +8,8 @@
 
 typedef enum
 {
-	LED_OFF,
-	LED_ON,
+	LED_OFF=0,
+	LED_ON=1,
 } LED_State;
 
 

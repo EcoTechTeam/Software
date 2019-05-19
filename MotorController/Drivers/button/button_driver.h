@@ -9,7 +9,6 @@
 #include <stdbool.h>
 
 
-//! TODO: Przemyslec jak oznaczac przyciski
 typedef enum
 {
 	BTN_A = 0x01,

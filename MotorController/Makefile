@@ -12,7 +12,7 @@ SIZE = $(TOOLCHAIN)-size
 
 RM = rm -f
 
-PROJECT = SteeringWheel
+PROJECT = MotorController
 
 
 # Includes directories

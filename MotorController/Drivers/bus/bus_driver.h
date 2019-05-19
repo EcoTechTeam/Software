@@ -8,8 +8,12 @@
 #include <stdint.h>
 
 
-#define BUS_BUFF_LEN	100
-#define BUS_BUFF_NUM	4
+#define BUS_BUFF_LEN	60 //po dobraniu odpowiednich timingów powinna być w nim tylko jedna ranka.
+#define BUS_BUFF_NUM	6
+
+#define BAUD 4800 //todo
+#define MYUBRR F_CPU/16/BAUD-1
+#define PRIORITY 1
 
 
 //! Initialization function
