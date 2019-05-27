@@ -14,9 +14,9 @@ RM = rm -f
 
 PROJECT = MotorController
 
-
 # Includes directories
-INC_DIRS = Drivers/bus
+INC_DIRS = Inc
+INC_DIRS += Drivers/bus
 INC_DIRS += Drivers/button
 INC_DIRS += Drivers/led 
 INC_DIRS += Drivers/timer
@@ -44,14 +44,11 @@ OUT_DIR_F = $(strip $(OUT_DIR))/
 C_DIR = compile
 C_DIR_F = $(strip $(C_DIR))/
 
-
 # Build flags
-CLOCK = 8000000
 CORE = atmega8
-CORE_FLAGS = -mmcu=$(CORE) -DF_CPU=$(CLOCK)
+CORE_FLAGS = -mmcu=$(CORE)
 
-OPTIMIZATION = -O0
-OPTIMIZATION += -ffunction-sections
+OPTIMIZATION = -O0 -ffunction-sections
 C_WARNINGS = -Wall -Wextra -pedantic
 C_STD = c11
 C_FLAGS = -std=$(C_STD) -g 

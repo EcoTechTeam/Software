@@ -5,15 +5,18 @@
 #ifndef BUS_DRIVER_H_
 #define BUS_DRIVER_H_
 
+
 #include <stdint.h>
+#include "hardware.h"
 
 
-#define BUS_BUFF_LEN	60 //po dobraniu odpowiednich timingów powinna być w nim tylko jedna ranka.
+//! Length of single frame buffer
+#define BUS_BUFF_LEN	60
+//! Number of frame buffers
 #define BUS_BUFF_NUM	6
 
-#define BAUD 4800 //todo
+#define BAUD 115200
 #define MYUBRR F_CPU/16/BAUD-1
-#define PRIORITY 1
 
 
 //! Initialization function

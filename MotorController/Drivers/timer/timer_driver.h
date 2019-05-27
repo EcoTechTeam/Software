@@ -6,6 +6,9 @@
 #define TIMER_DRIVER_H_
 
 
+#include "hardware.h"
+
+
 //! TODO: concider frequency
 #define TIM_TICK_MS	10
 

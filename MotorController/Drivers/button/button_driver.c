@@ -2,49 +2,47 @@
  * button_driver.c
  */
 
-#include <avr/io.h>
 #include <stdint.h>
 #include "button_driver.h"
 
 
 void BTN_Init(void)
 {
-
 	// Set GPIO in input configuration
-	DDRC&=!(1<<PC0); //input
-	PORTC|=(1<<PC0); //pull up
+	BTN_DDR_A &= !(1<<BTN_P_A);
+	BTN_PORT_A |= (1<<BTN_P_A);
 
-	DDRC&=!(1<<PC1);
-	PORTC|=(1<<PC1);
+	BTN_DDR_B &= !(1<<BTN_P_B);
+	BTN_PORT_B |= (1<<BTN_P_B);
 
-	DDRD&=!(1<<PD2);
-	PORTD|=(1<<PD2);
+	BTN_DDR_C &= !(1<<BTN_P_C); //input
+	BTN_PORT_C |= (1<<BTN_P_C); //pull up
 
-	DDRD&=!(1<<PD3);
-	PORTD|=(1<<PD3);
+	BTN_DDR_D &= !(1<<BTN_P_D);
+	BTN_PORT_D |= (1<<BTN_P_D);
 }
 
 
 bool BTN_StateA(void)
 {
 	// Return state of selected button
-	if (PIND & (1<<PD2)) return false;
+	if (BTN_PIN_A & (1<<BTN_P_A)) return false;
 	else return true;
 }
 
 
 bool BTN_StateB(void)
 {
-    // Return state of selected button
-	if (PIND & (1<<PD3)) return false;
+	// Return state of selected button
+	if (BTN_PIN_B & (1<<BTN_P_B)) return false;
 	else return true;
 }
 
 
 bool BTN_StateC(void)
 {
-    // Return state of selected button
-	if (PINC & (1<<PC0)) return false;
+	// Return state of selected button
+	if(BTN_PIN_C & (1<<BTN_P_C)) return false;
 	else return true;
 }
 
@@ -52,7 +50,7 @@ bool BTN_StateC(void)
 bool BTN_StateD(void)
 {
     // Return state of selected button
-	if (PINC & (1<<PC1)) return false;
+	if (BTN_PIN_D & (1<<BTN_P_D)) return false;
 	else return true;
 }
 
@@ -75,6 +73,7 @@ bool BTN_Pressed(BTN_Button button)
 		break;
 	default:
 		return false;
+		break;
 	}
 }
 

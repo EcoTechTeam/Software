@@ -3,9 +3,6 @@
  */
 
 #include <stdbool.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-
 #include "bus_driver.h"
 
 
@@ -45,7 +42,7 @@ void BUS_Init(void)
 
 	// TIM0 peripheral initialization
 	//todo prescaler TIM0 wypadało by dobrac do szybkosci zegara i ubrr. z 8 uwalało bajty przy 1mhz i 4800, ale na 8mhz moze byc ok.
-	TIMSK |= (1<<TOIE0); //interr after overflow
+	TIMSK |= (1<<BUS_TOIE); //interr after overflow
 	sei();
 }
 
@@ -74,7 +71,7 @@ void BUS_Send(uint8_t *buff, uint8_t len)
 }
 
 
-void BUS_SendBlocking(uint8_t *buff, uint8_t len)  //
+void BUS_SendBlocking(uint8_t *buff, uint8_t len)
 {
 	//while(_BusFree==false) ;  //todo kurde to powinno być odkomentowane i tim2 powinien wychodzic z tej petli, ale zapetla sie w nieskonczonosc
 	for(uint8_t i=0; i<len; i++)
@@ -106,8 +103,8 @@ ISR(USART_RXC_vect)
 	else _RxOverflow = true;
 
 	//! Start and reset timer to fire the isr if this is last byte
-	TCNT0 = 0;
-	TCCR0 |= (1<<CS01) | (1<<CS00);
+	BUS_TCNT = 0;
+	BUS_TCCR |= (1<<CS01) | (1<<CS00);
 }
 
 
@@ -118,7 +115,7 @@ ISR(TIMER0_OVF_vect)
 	bool temp_RxOverflow = _RxOverflow;
 
 	//! Stop timer
-	TCCR0 &= !((1<<CS01) | (1<<CS00));
+	BUS_TCCR &= !((1<<CS01) | (1<<CS00));
 	//! Set next rx buffer and reset data index to 0
 	_RxMsg = (_RxMsg + 1) % BUS_BUFF_NUM;
 	_RxData = 0;

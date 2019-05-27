@@ -6,6 +6,9 @@
 #define LED_DRIVER_H_
 
 
+#include "hardware.h"
+
+
 typedef enum
 {
 	LED_OFF=0,

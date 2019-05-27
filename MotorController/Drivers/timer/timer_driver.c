@@ -3,11 +3,7 @@
  */
 
 #include <stdint.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
-
 #include "timer_driver.h"
-
 
 
 //! Global SysTick timer. Can be externed in other files

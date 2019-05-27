@@ -7,6 +7,7 @@
 
 
 #include <stdbool.h>
+#include "hardware.h"
 
 
 typedef enum

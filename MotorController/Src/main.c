@@ -14,36 +14,41 @@
 #include "message_lib.h"
 
 
-static volatile bool _Button=true;
-static bool _Active=false;
-static uint8_t a[]={0xff,0xee,0xee,0xff};
+static volatile bool _SendState = false;
 
 
 int main(void)
 {
+	bool btnA;
+	bool btnB;
+	bool btnC;
+	bool btnD;
+	uint8_t messageBuffer[8];
+
 	BUS_Init();
 	TIM_Init();
-	MSG_CrcInit();
-	wdt_enable(WDTO_1S);
 	LED_Init();
 	BTN_Init();
+	MSG_CrcInit();
+
+	wdt_enable(WDTO_1S);
 	sei();
 
 	while(1)
 	{
+		//! Reset watchdog
 		wdt_reset();
-		if( _Button && BTN_StateC()) //holding & pushed
+		//! Get actual button states
+		btnA = BTN_StateA();
+		btnB = BTN_StateB();
+		btnC = BTN_StateC();
+		btnD = BTN_StateD();
+		//! Send frame flag set by timer
+		if(_SendState)
 		{
-			MSG_Send(a,4,0xee);
-			TIM_Reset();
-			_Button=false;
-			_Active=true;
-		}
-		else if(_Active && !BTN_StateC())//released
-		{
-			MSG_Send(a,4,0xdd);
-			_Active=false;
-			_Button=true;
+			uint8_t len = MSG_PackButtonStates(btnA, btnB, btnC, btnD, messageBuffer);
+			BUS_Send(messageBuffer, len);
+			_SendState = false;
 		}
 	}
 }
@@ -51,7 +56,7 @@ int main(void)
 
 void TIM_SysTick(void)
 {
-	_Button=true;
+	_SendState = true;
 }
 
 
@@ -59,7 +64,7 @@ void MSG_Received(uint8_t* data, uint8_t len)
 {
     (void) data;
     (void) len;
-	//u can interpret input date here
+	//! Do something with received data
 }
 
 
