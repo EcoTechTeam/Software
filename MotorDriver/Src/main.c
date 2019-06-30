@@ -22,6 +22,8 @@ uint8_t _TableIndex;
 
 bool _ButtonState = false;
 uint8_t _ControllerState;
+uint8_t _MessageTimer = 0;
+
 
 const uint16_t _CurrentTable[118] = {2500, 2541, 2592, 2643, 2694, 2744, 2795, 2846, 2896, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947,
 		2947, 2947, 2947, 2947, 2947, 2947, 2947, 2926, 2910, 2894, 2877, 2861, 2845, 2828, 2812, 2795, 2779, 2763, 2746,
@@ -123,6 +125,9 @@ void SYS_Tick(void)
 		_LedTim = 0;
 		LED_ToggleLed(LED1);
 	}
+
+	if(_MessageTimer > 10) _ControllerState = 0;
+	else _MessageTimer++;
 }
 
 
@@ -143,6 +148,7 @@ void ENC_FullRotation(void)
 
 void MSG_Received(uint8_t *buff, uint8_t len)
 {
+	_MessageTimer = 0;
 	//! TODO: Do something with message
 	if(buff[0]) _ControllerState = 1;
 	else if(buff[1]) _ControllerState = 2;
