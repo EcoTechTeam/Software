@@ -8,6 +8,7 @@
 #include "motor_driver.h"
 #include "button_driver.h"
 #include "encoder_driver.h"
+#include "bus_driver.h"
 
 
 uint8_t _LedTim = 0;
@@ -36,6 +37,7 @@ int main(void)
 	MTR_Init();
 	BTN_Init();
 	ENC_Init();
+	BUS_Init();
 
 	while(1)
 	{
@@ -106,4 +108,10 @@ void MTR_SamplesReady(uint16_t *samples)
 void ENC_FullRotation(void)
 {
 	_Rotations++;
+}
+
+
+void BUS_Received(uint8_t *buff, uint8_t len)
+{
+	//! TODO: Do something with message
 }

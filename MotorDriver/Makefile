@@ -44,6 +44,7 @@ INC_DIRS += Drivers/led
 INC_DIRS += Drivers/motor
 INC_DIRS += Drivers/button
 INC_DIRS += Drivers/encoder
+INC_DIRS += Drivers/bus
 
 # additional directories with source files (absolute or relative paths to
 # folders with source files, current folder is always included)
@@ -53,6 +54,7 @@ SRCS_DIRS += Drivers/led
 SRCS_DIRS += Drivers/motor
 SRCS_DIRS += Drivers/button
 SRCS_DIRS += Drivers/encoder
+SRCS_DIRS += Drivers/bus
 
 #=============================================================================#
 # paths formatting
