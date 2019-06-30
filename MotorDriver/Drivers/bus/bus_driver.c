@@ -47,7 +47,7 @@ void BUS_Init(void)
 	//! DIV_Fraction = 0.9375 * 16 = 15
 	//! TODO: Change to calculations based on BUS_BAUD macro
 	BUS_UART->BRR = (585 << 4) | 15;
-	BUS_UART->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_TE | USART_CR1_RE;
+	BUS_UART->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_IDLEIE | USART_CR1_TE | USART_CR1_RE;
 
 	NVIC_EnableIRQ(USART3_IRQn);
 }
