@@ -3,7 +3,7 @@
  */
 
 #include "led_driver.h"
-#include "msg_Lib.h"
+#include "msg_lib.h"
 #include "hardware.h"
 
 static uint8_t  _CrcTable[256];
@@ -43,19 +43,22 @@ uint8_t MSG_CalculateCrc(uint8_t *data, uint8_t len)
     //! The final remainder is the CRC.
     return remainder;
 }
+
+
 bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc)
 {
     if(MSG_CalculateCrc(data, len) == crc) return true; //tu chyba len-1
     else return false;
 }
 
+
 void BUS_Received(uint8_t *buff, uint8_t len)
 {
 	int i=0;
 	//for(i;i<len;i++)
 	//{
-		if(buff[i]==ADDRESS /*&& (MSG_ValidateCrc(&data[i],data[i+2]+4,data[i+data[i+2]+3]))*/)
-		MSG_Received((&buff[i],len-i);
+	if(buff[i]==ADDRESS) /*&& (MSG_ValidateCrc(&data[i],data[i+2]+4,data[i+data[i+2]+3]))*/
+		MSG_Received(&buff[i],len-i);
 
 	//}
 }

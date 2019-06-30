@@ -9,7 +9,7 @@
 #include "button_driver.h"
 #include "encoder_driver.h"
 #include "bus_driver.h"
-#include "msg_Lib.h"
+#include "msg_lib.h"
 
 
 uint8_t _LedTim = 0;
@@ -58,8 +58,7 @@ int main(void)
 	BTN_Init();
 	ENC_Init();
 	BUS_Init();
-	TIM_Init();
-	MSG_Init();
+	MSG_CrcInit();
 
 	while(1)
 	{
@@ -74,30 +73,28 @@ int main(void)
 			_AvgSample = acc / MTR_BUFFLEN;
 		}
 
-
 		if(_ControllerState==0)
 		{
-
 			MTR_TurnOff();
-
+			_ButtonState = false;
 		}
-		else MTR_TurnOn();
-
+		else if(!_ButtonState)
+		{
+			MTR_TurnOn();
+			_ButtonState = true;
+		}
 
 		//! TESTING PURPOSES!!!!
 		if(_ControllerState==1) //standard mapa
 		{
-
 			LED_SetLedOn(LED3);
 		}
 		else if(_ControllerState==2) //turbo mapa
 		{
-
 			LED_SetLedOn(LED2);
 		}
 		else if(_ControllerState==3) //?? max current
 		{
-
 			LED_SetLedOn(LED2);
 			LED_SetLedOn(LED3);
 		}
@@ -115,13 +112,9 @@ void SYS_Tick(void)
 	else _TableIndex = 0;
 	if(_TableIndex >= 118) _TableIndex = 117;
 
-	if(_ControllerState==2)
-	MTR_SetLimit(_CurrentTable2[_TableIndex]);
-	if(_ControllerState==3)
-	MTR_SetLimit(_CurrentTable3[_TableIndex]);
-	else
-	MTR_SetLimit(_CurrentTable[_TableIndex]);
-
+	if(_ControllerState == 2) MTR_SetLimit(_CurrentTable2[_TableIndex]);
+	if(_ControllerState == 3) MTR_SetLimit(_CurrentTable3[_TableIndex]);
+	else MTR_SetLimit(_CurrentTable[_TableIndex]);
 
 	//! TODO: Handle events
 	_LedTim++;
@@ -148,7 +141,11 @@ void ENC_FullRotation(void)
 }
 
 
-void BUS_Received(uint8_t *buff, uint8_t len)
+void MSG_Received(uint8_t *buff, uint8_t len)
 {
 	//! TODO: Do something with message
+	if(buff[0]) _ControllerState = 1;
+	else if(buff[1]) _ControllerState = 2;
+	else if(buff[2]) _ControllerState = 3;
+	else _ControllerState = 0;
 }
