@@ -8,6 +8,9 @@
 #include "motor_driver.h"
 #include "button_driver.h"
 #include "encoder_driver.h"
+#include "timer_driver.h"
+#include "bus_driver.h"
+#include "msg_Lib.h"
 
 
 uint8_t _LedTim = 0;
@@ -31,11 +34,15 @@ const uint16_t _CurrentTable[118] = {2500, 2541, 2592, 2643, 2694, 2744, 2795, 2
 
 int main(void)
 {
+
 	SYS_Init();
 	LED_Init();
 	MTR_Init();
 	BTN_Init();
 	ENC_Init();
+	BUS_Init();
+	TIM_Init();
+	MSG_Init();
 
 	while(1)
 	{
@@ -107,3 +114,15 @@ void ENC_FullRotation(void)
 {
 	_Rotations++;
 }
+void MSG_recived(uint8_t *data, uint8_t len)
+{
+	//if gas to =true
+	//reset tim
+}
+void TIM_fire(void)
+{
+	//ta zmienna = false
+}
+
+
+

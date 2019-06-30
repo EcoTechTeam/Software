@@ -13,7 +13,7 @@
 void TIM_Init(void)
 {
 	TCCR1B |= (1<<WGM12); //CTC Mode
-	OCR1A = 1337;                   // todo ##################### to na pewno trzeba dobrać #####################
+	OCR1A = 2;                   // todo ##################### to na pewno trzeba dobrać #####################
 	TIMSK |= (1<<OCIE1A); //setting interr after achieving value in OCR2
 	TIM_Start();
 }
