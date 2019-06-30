@@ -4,6 +4,7 @@
 
 #include <stdbool.h>
 #include "led_driver.h"
+#include "hardware.h"
 
 
 void LED_Init(void)

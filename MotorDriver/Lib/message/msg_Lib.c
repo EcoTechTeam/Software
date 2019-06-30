@@ -51,10 +51,11 @@ bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc)
 
 void BUS_Received(uint8_t *buff, uint8_t len)
 {
-	for(int i=0;i<len;i++)// mniej niz len bo over
-	{
-		if(data[i]==ADDRESS && (MSG_ValidateCrc(data[i],data[i+2],data[i+data[i+2]])))
-		MSG_recived(&data[i],len-i);
+	int i=0;
+	//for(i;i<len;i++)
+	//{
+		if(buff[i]==ADDRESS /*&& (MSG_ValidateCrc(&data[i],data[i+2]+4,data[i+data[i+2]+3]))*/)
+		MSG_Received((&buff[i],len-i);
 
-	}
+	//}
 }

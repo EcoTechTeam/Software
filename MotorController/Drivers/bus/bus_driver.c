@@ -73,7 +73,6 @@ void BUS_Send(uint8_t *buff, uint8_t len)
 
 void BUS_SendBlocking(uint8_t *buff, uint8_t len)
 {
-	//while(_BusFree==false) ;  //todo kurde to powinno być odkomentowane i tim2 powinien wychodzic z tej petli, ale zapetla sie w nieskonczonosc
 	for(uint8_t i=0; i<len; i++)
 	{
 		while ( !( UCSRA & (1<<UDRE)) );

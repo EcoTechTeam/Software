@@ -13,9 +13,10 @@ void TIM_Init(void)
 }
 
 
-void przerwanieTIM(){ //todo
+void przerwanieTIM()//todo
+{
 
-TIM_fire();
+TIM_tick();
 }
 
 void TIM_reset(void)

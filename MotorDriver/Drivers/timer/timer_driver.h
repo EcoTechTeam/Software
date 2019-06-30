@@ -10,7 +10,7 @@
 
 
 void TIM_Init(void);
-void __attribute__((weak)) TIM_fire(void);
+void __attribute__((weak)) TIM_tick(void);
 void TIM_reset(void);
 
 #endif /* TIMER_DRIVER_H_ */

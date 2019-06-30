@@ -62,9 +62,9 @@ uint8_t MSG_Pack(MSG_Command cmd, uint8_t *data, uint8_t len, uint8_t *buff)
 
     //! Copy passed data to buffer
     for(uint8_t i=0; i<len; i++)
-        msg->Payload[i] = data[i];
+        msg->Payload[i] =data[i];
     //! Append CRC
-    msg->Payload[len] = MSG_CalculateCrc(buff, len + 2);
+    msg->Payload[len] = MSG_CalculateCrc(buff, len + 3);// tu bylo +2
     //! Return size of packed message
     return len + 4;
 }

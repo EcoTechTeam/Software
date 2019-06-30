@@ -59,7 +59,7 @@ int main(void)
 		}
 
 		//! TESTING PURPOSES!!!!
-		if(BTN_State())
+		if(BTN_State() || _MotorState)
 		{
 			if(!_ButtonState)
 			{
@@ -115,12 +115,12 @@ void ENC_FullRotation(void)
 {
 	_Rotations++;
 }
-void MSG_recived(uint8_t *data, uint8_t len)
+void MSG_Received((uint8_t *data, uint8_t len)
 {
-	if(data[0]==true) _MotorState=true
+	if(data[0]==true) _MotorState=true;
 	TIM_reset();
 }
-void TIM_fire(void)
+void TIM_tick(void)
 {
 	_MotorState = false;
 }

@@ -10,7 +10,6 @@
 #include "button_driver.h"
 #include "led_driver.h"
 #include "timer_driver.h"
-
 #include "message_lib.h"
 
 
@@ -46,6 +45,7 @@ int main(void)
 		//! Send frame flag set by timer
 		if(_SendState)
 		{
+			//LED_RedToggle();
 			uint8_t len = MSG_PackButtonStates(btnA, btnB, btnC, btnD, messageBuffer);
 			BUS_Send(messageBuffer, len);
 			_SendState = false;

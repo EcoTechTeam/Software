@@ -15,7 +15,7 @@
 //! Number of frame buffers
 #define BUS_BUFF_NUM	6
 
-#define BAUD 115200 //todo
+#define BAUD 38400 //todo
 #define MYUBRR F_CPU/16/BAUD-1
 
 

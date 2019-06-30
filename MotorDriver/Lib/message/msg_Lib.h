@@ -11,7 +11,7 @@
 
 
 #define POLYNOMIAL          0x9b
-#define ADDRESS             2
+#define ADDRESS             1
 
 
 typedef enum
@@ -34,7 +34,7 @@ typedef struct
 void MSG_CrcInit(void);
 uint8_t MSG_CalculateCrc(uint8_t *data, uint8_t len);
 bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc);
-void __attribute__((weak)) MSG_recived(uint8_t *buff, uint8_t len);
+void __attribute__((weak)) MSG_Received((uint8_t *buff, uint8_t len);
 
 
 

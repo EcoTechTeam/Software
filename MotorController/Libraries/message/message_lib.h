@@ -25,7 +25,8 @@ typedef enum
 typedef struct
 {
     uint8_t Address;
-    MSG_Command Command;
+    //MSG_Command Command;
+    uint8_t Command;
     uint8_t Length;
     uint8_t Payload[];
 } MSG_Message;
