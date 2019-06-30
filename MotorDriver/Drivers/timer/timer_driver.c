@@ -9,13 +9,17 @@
 
 void TIM_Init(void)
 {
-	//inicjuje timer odmierzajacy kilka ms od ostatniej wiadomosc i wylaczajacy silnik
+	//inicjuje timer odmierzajacy kilka ms od ostatniej wiadomosc i wylaczajacy silnik todo
 }
 
 
-//przerwanie(){
+void przerwanieTIM(){ //todo
 
-//TIM_fire();
-//}
+TIM_fire();
+}
 
+void TIM_reset(void)
+{
+	//todo reset
+}
 

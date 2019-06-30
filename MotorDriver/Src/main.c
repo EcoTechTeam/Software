@@ -22,6 +22,7 @@ int16_t _Rpm;
 uint8_t _TableIndex;
 
 bool _ButtonState = false;
+bool _MotorState;
 
 const uint16_t _CurrentTable[118] = {2500, 2541, 2592, 2643, 2694, 2744, 2795, 2846, 2896, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947,
 		2947, 2947, 2947, 2947, 2947, 2947, 2947, 2926, 2910, 2894, 2877, 2861, 2845, 2828, 2812, 2795, 2779, 2763, 2746,
@@ -116,13 +117,10 @@ void ENC_FullRotation(void)
 }
 void MSG_recived(uint8_t *data, uint8_t len)
 {
-	//if gas to =true
-	//reset tim
+	if(data[0]==true) _MotorState=true
+	TIM_reset();
 }
 void TIM_fire(void)
 {
-	//ta zmienna = false
+	_MotorState = false;
 }
-
-
-
