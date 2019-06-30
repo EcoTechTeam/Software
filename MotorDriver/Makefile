@@ -45,6 +45,7 @@ INC_DIRS += Drivers/motor
 INC_DIRS += Drivers/button
 INC_DIRS += Drivers/encoder
 INC_DIRS += Drivers/bus
+INC_DIRS += Lib/message
 
 # additional directories with source files (absolute or relative paths to
 # folders with source files, current folder is always included)
@@ -55,6 +56,7 @@ SRCS_DIRS += Drivers/motor
 SRCS_DIRS += Drivers/button
 SRCS_DIRS += Drivers/encoder
 SRCS_DIRS += Drivers/bus
+SRCS_DIRS  += Lib/message
 
 #=============================================================================#
 # paths formatting
@@ -67,7 +69,7 @@ INC_DIRS_F = -I. $(patsubst %, -I%, $(INC_DIRS))
 
 OUT_DIR_F = $(strip $(OUT_DIR))/
 COMPILE_DIR_F = $(strip $(COMPILE_DIR))/
-
+INC_DIRS += Drivers/system
 # contents of output directory
 GENERATED = $(wildcard $(patsubst %, $(COMPILE_DIR_F)*.%, d lst o))
 GENERATED += $(wildcard $(patsubst %, $(OUT_DIR_F)*.%, bin dmp elf lss map))

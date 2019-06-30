@@ -1,10 +1,10 @@
 /*
- * message_lib.c
+ * button_driver.c
  */
 
-
-#include "message_lib.h"
-
+#include "led_driver.h"
+#include "msg_Lib.h"
+#include "hardware.h"
 
 static uint8_t  _CrcTable[256];
 
@@ -43,37 +43,19 @@ uint8_t MSG_CalculateCrc(uint8_t *data, uint8_t len)
     //! The final remainder is the CRC.
     return remainder;
 }
-
-
 bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc)
 {
-    if(MSG_CalculateCrc(data, len) == crc) return true;
+    if(MSG_CalculateCrc(data, len) == crc) return true; //tu chyba len-1
     else return false;
 }
 
-
-uint8_t MSG_Pack(MSG_Command cmd, uint8_t *data, uint8_t len, uint8_t *buff)
+void BUS_Received(uint8_t *buff, uint8_t len)
 {
-    MSG_Message *msg = (MSG_Message *) buff;
-    //! Set address and command
-    msg->Address = ADDRESS;
-    msg->Command = cmd;
-    msg->Length = len;
+	int i=0;
+	//for(i;i<len;i++)
+	//{
+		if(buff[i]==ADDRESS /*&& (MSG_ValidateCrc(&data[i],data[i+2]+4,data[i+data[i+2]+3]))*/)
+		MSG_Received((&buff[i],len-i);
 
-    //! Copy passed data to buffer
-    for(uint8_t i=0; i<len; i++)
-        msg->Payload[i] =data[i];
-    //! Append CRC
-    msg->Payload[len] = MSG_CalculateCrc(buff, len + 3);// tu bylo +2
-    //! Return size of packed message
-    return len + 4;
+	//}
 }
-
-
-uint8_t MSG_PackButtonStates(bool a, bool b, bool c, bool d, uint8_t *buff)
-{
-    uint8_t data[4] = {a, b, c, d};
-    return MSG_Pack(MSG_BTN_STATE, data, 4, buff);
-}
-
-

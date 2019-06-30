@@ -1,9 +1,9 @@
 /*
- * message_lib.h
+ * msg_Lib.h
  */
 
-#ifndef MESSAGE_LIB_H_
-#define MESSAGE_LIB_H_
+#ifndef MSG_LIB_H_
+#define MSG_LIB_H_
 
 
 #include <stdint.h>
@@ -25,8 +25,7 @@ typedef enum
 typedef struct
 {
     uint8_t Address;
-    //MSG_Command Command;
-    uint8_t Command;
+    MSG_Command Command;
     uint8_t Length;
     uint8_t Payload[];
 } MSG_Message;
@@ -35,9 +34,10 @@ typedef struct
 void MSG_CrcInit(void);
 uint8_t MSG_CalculateCrc(uint8_t *data, uint8_t len);
 bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc);
-
-uint8_t MSG_Pack(MSG_Command cmd, uint8_t *data, uint8_t len, uint8_t *buff);
-uint8_t MSG_PackButtonStates(bool a, bool b, bool c, bool d, uint8_t *buff);
+void __attribute__((weak)) MSG_Received((uint8_t *buff, uint8_t len);
 
 
-#endif
+
+
+
+#endif /* MSG_LIB_H_ */
