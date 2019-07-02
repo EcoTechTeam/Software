@@ -45,20 +45,17 @@ uint8_t MSG_CalculateCrc(uint8_t *data, uint8_t len)
 }
 
 
-bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc)
+bool MSG_ValidateCrc(uint8_t *data, uint8_t len)
 {
-    if(MSG_CalculateCrc(data, len) == crc) return true; //tu chyba len-1
-    else return false;
+    if(MSG_CalculateCrc(data, len)) return false; //tu chyba len-1
+    else return true;
 }
 
 
 void BUS_Received(uint8_t *buff, uint8_t len)
 {
-	int i=0;
-	//for(i;i<len;i++)
-	//{
-	if(buff[i]==ADDRESS) /*&& (MSG_ValidateCrc(&data[i],data[i+2]+4,data[i+data[i+2]+3]))*/
-		MSG_Received(&buff[i],len-i);
+	if(buff[0]==ADDRESS && MSG_ValidateCrc(&buff[0],buff[2]+4))
+		MSG_Received(&buff[3],len-4);
 
-	//}
+
 }

@@ -45,10 +45,10 @@ uint8_t MSG_CalculateCrc(uint8_t *data, uint8_t len)
 }
 
 
-bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc)
+bool MSG_ValidateCrc(uint8_t *data, uint8_t len)
 {
-    if(MSG_CalculateCrc(data, len) == crc) return true;
-    else return false;
+    if(MSG_CalculateCrc(data, len)) return false;
+    else return true;
 }
 
 

@@ -34,7 +34,7 @@ typedef struct
 
 void MSG_CrcInit(void);
 uint8_t MSG_CalculateCrc(uint8_t *data, uint8_t len);
-bool MSG_ValidateCrc(uint8_t *data, uint8_t len, uint8_t crc);
+bool MSG_ValidateCrc(uint8_t *data, uint8_t len);
 
 uint8_t MSG_Pack(MSG_Command cmd, uint8_t *data, uint8_t len, uint8_t *buff);
 uint8_t MSG_PackButtonStates(bool a, bool b, bool c, bool d, uint8_t *buff);

@@ -12,7 +12,6 @@
 #include "msg_lib.h"
 
 
-uint8_t _LedTim = 0;
 bool _ProcessSamples;
 uint16_t *_SamplesPointer;
 uint16_t _AvgSample;
@@ -20,7 +19,8 @@ uint32_t _Rotations;
 int16_t _Rpm;
 uint8_t _TableIndex;
 
-bool _ButtonState = false;
+
+bool _MotorState = false;
 uint8_t _ControllerState;
 uint8_t _MessageTimer = 0;
 
@@ -75,30 +75,48 @@ int main(void)
 			_AvgSample = acc / MTR_BUFFLEN;
 		}
 
-		if(_ControllerState==0)
+		if(_ControllerState==0 && _MotorState)
 		{
 			MTR_TurnOff();
-			_ButtonState = false;
+			_MotorState=false;
+
 		}
-		else if(!_ButtonState)
+		else if(!_MotorState)
 		{
 			MTR_TurnOn();
-			_ButtonState = true;
+			_MotorState=true;
+
 		}
 
 		//! TESTING PURPOSES!!!!
 		if(_ControllerState==1) //standard mapa
 		{
 			LED_SetLedOn(LED3);
+			LED_SetLedOff(LED2);
+			LED_SetLedOff(LED1);
 		}
-		else if(_ControllerState==2) //turbo mapa
+		else if(_ControllerState==2) //res
 		{
 			LED_SetLedOn(LED2);
+			LED_SetLedOff(LED3);
+			LED_SetLedOff(LED1);
 		}
-		else if(_ControllerState==3) //?? max current
+		else if(_ControllerState==3) //mapa slow
 		{
 			LED_SetLedOn(LED2);
 			LED_SetLedOn(LED3);
+			LED_SetLedOff(LED1);
+		}
+		else if(_ControllerState==4) //mapa fast
+				{
+			LED_SetLedOff(LED2);
+			LED_SetLedOff(LED3);
+			LED_SetLedOn(LED1);
+				}
+		else {
+			LED_SetLedOff(LED2);
+			LED_SetLedOff(LED3);
+			LED_SetLedOff(LED1);
 		}
 	}
 }
@@ -119,14 +137,14 @@ void SYS_Tick(void)
 	else MTR_SetLimit(_CurrentTable[_TableIndex]);
 
 	//! TODO: Handle events
-	_LedTim++;
-	if(_LedTim == 100)
+	if(_MessageTimer > 10)
 	{
-		_LedTim = 0;
-		LED_ToggleLed(LED1);
-	}
 
-	if(_MessageTimer > 10) _ControllerState = 0;
+		_ControllerState=0;
+
+
+
+	}
 	else _MessageTimer++;
 }
 
@@ -153,5 +171,6 @@ void MSG_Received(uint8_t *buff, uint8_t len)
 	if(buff[0]) _ControllerState = 1;
 	else if(buff[1]) _ControllerState = 2;
 	else if(buff[2]) _ControllerState = 3;
+	else if(buff[3]) _ControllerState = 4;
 	else _ControllerState = 0;
 }
