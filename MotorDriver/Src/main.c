@@ -75,17 +75,15 @@ int main(void)
 			_AvgSample = acc / MTR_BUFFLEN;
 		}
 
-		if(_ControllerState==0 && _MotorState)
+		if(!_ControllerState)
 		{
 			MTR_TurnOff();
 			_MotorState=false;
-
 		}
 		else if(!_MotorState)
 		{
 			MTR_TurnOn();
 			_MotorState=true;
-
 		}
 
 		//! TESTING PURPOSES!!!!
