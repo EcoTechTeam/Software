@@ -14,7 +14,7 @@
 
 #define MTR_HIST		20
 #define MTR_TIM_ARR		30000
-#define MTR_TIM_ON		29950
+#define MTR_TIM_ON		29900
 #define MTR_TIM_OFF		0
 #define MTR_DT          40
 

@@ -138,7 +138,7 @@ void SYS_Tick(void)
 	if(_MessageTimer > 10)
 	{
 
-		_ControllerState=0;
+//		_ControllerState=0;
 
 
 
