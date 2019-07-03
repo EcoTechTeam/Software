@@ -18,6 +18,7 @@ static bool _RxOverflow = false;
 
 static uint8_t _TempDR;
 
+uint16_t _sr;
 
 void BUS_Init(void)
 {
@@ -49,34 +50,38 @@ void BUS_Init(void)
 	//! TODO: Change to calculations based on BUS_BAUD macro
 	BUS_UART->BRR = (58 << 4) | 10;
 	BUS_UART->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_IDLEIE | USART_CR1_RE;
-
+	BUS_UART->CR3 |= USART_CR3_EIE;
 	NVIC_EnableIRQ(USART3_IRQn);
 }
 
 
 void USART3_IRQHandler(void)
 {
-	uint16_t sr = BUS_UART->SR;
-	if(sr & USART_SR_RXNE)
+	_sr = BUS_UART->SR;
+	if(_sr & USART_SR_RXNE)
 	{
 		if(_RxData < BUS_BUFF_LEN) _RxBuff[_RxMsg][_RxData++] = BUS_UART->DR;
 		else _RxOverflow = true;
 	}
-	if(sr & USART_SR_IDLE)
+	if(_sr & USART_SR_IDLE)
 	{
 		//! Read DR to clear flag
 		_TempDR = BUS_UART->DR;
 
-        uint8_t temp_RxMsg = _RxMsg;
-        uint8_t temp_RxData = _RxData;
-        bool temp_RxOverflow = _RxOverflow;
+		uint8_t temp_RxMsg = _RxMsg;
+		uint8_t temp_RxData = _RxData;
+		bool temp_RxOverflow = _RxOverflow;
 
-        _RxMsg = (_RxMsg + 1) % BUS_BUFF_NUM;
-        _RxData = 0;
-        _RxOverflow = false;
+		_RxMsg = (_RxMsg + 1) % BUS_BUFF_NUM;
+		_RxData = 0;
+		_RxOverflow = false;
 
 		//! Call receive function if receive buffer is not overflowed
 		if(!temp_RxOverflow) BUS_Received(_RxBuff[temp_RxMsg], temp_RxData);
+	}
+	if(_sr & (USART_SR_ORE || USART_SR_FE || USART_SR_NE ))
+	{
+		_sr = BUS_UART->DR;
 	}
 }
 
