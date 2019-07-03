@@ -35,7 +35,8 @@ void BUS_Init(void)
 	UBRRH  = (uint8_t) ((ubrr)>>8);
 	UBRRL  = (uint8_t) ubrr;
 	//Enable receiver and transmitter and interrupt*/
-	UCSRB = (1<<RXEN) | (1<<TXEN) | (1<<RXCIE) | (1<<TXCIE);
+	//UCSRB = (1<<RXEN) | (1<<TXEN) | (1<<RXCIE) | (1<<TXCIE);
+	UCSRB = (1<<TXEN) | (1<<TXCIE);
 	/* Set frame format: 8data, 1stop bit , parity disabled*/
 	UCSRC |= (1<<URSEL) | (1<<UCSZ0) | (1<<UCSZ1);
 	UCSRC &= !((1<<UPM0) | (1<<UPM1));
