@@ -49,7 +49,7 @@ void BUS_Init(void)
 	//! DIV_Fraction = 0.9375 * 16 = 15
 	//! TODO: Change to calculations based on BUS_BAUD macro
 	BUS_UART->BRR = (58 << 4) | 10;
-	BUS_UART->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_IDLEIE | USART_CR1_RE;
+	BUS_UART->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_IDLEIE | USART_CR1_RE | USART_CR1_PEIE;
 	BUS_UART->CR3 |= USART_CR3_EIE;
 	NVIC_EnableIRQ(USART3_IRQn);
 }
@@ -79,9 +79,9 @@ void USART3_IRQHandler(void)
 		//! Call receive function if receive buffer is not overflowed
 		if(!temp_RxOverflow) BUS_Received(_RxBuff[temp_RxMsg], temp_RxData);
 	}
-	if(_sr & (USART_SR_ORE || USART_SR_FE || USART_SR_NE ))
+	if(_sr & (USART_SR_ORE || USART_SR_FE || USART_SR_NE || USART_SR_PE))
 	{
-		_sr = BUS_UART->DR;
+		_TempDR = BUS_UART->DR;
 	}
 }
 
