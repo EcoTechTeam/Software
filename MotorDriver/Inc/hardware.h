@@ -50,7 +50,8 @@
 
 //! ########################### INPUT ADC ###########################
 #define ADC_GPIO	GPIOA
-#define ADC_VIN_PIN	GPIO_PIN_12
+#define ADC_VIN_PIN	GPIO_PIN_1
+#define VIN_ADC		ADC2
 
 //! ########################### DRIVER ###########################
 #define MTR_HIN_GPIO	GPIOA

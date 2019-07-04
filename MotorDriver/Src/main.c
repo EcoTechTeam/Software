@@ -18,7 +18,7 @@ uint16_t _AvgSample;
 uint32_t _Rotations;
 int16_t _Rpm;
 uint8_t _TableIndex;
-
+bool _Lock = false;
 
 bool _MotorState = false;
 uint8_t _ControllerState;
@@ -136,14 +136,17 @@ void SYS_Tick(void)
 
 	//! TODO: Handle events
 	if(_MessageTimer > 10)
-	{
-
 		_ControllerState=0;
-
-
-
-	}
 	else _MessageTimer++;
+	_Lock = false;
+}
+
+
+void MTR_UnderVoltage(void)
+{
+	MTR_TurnOff();
+	_ControllerState = 0;
+	_Lock = true;
 }
 
 
@@ -165,10 +168,14 @@ void ENC_FullRotation(void)
 void MSG_Received(uint8_t *buff, uint8_t len)
 {
 	_MessageTimer = 0;
-	//! TODO: Do something with message
-	if(buff[0]) _ControllerState = 1;
-	else if(buff[1]) _ControllerState = 2;
-	else if(buff[2]) _ControllerState = 3;
-	else if(buff[3]) _ControllerState = 4;
+	if(!_Lock)
+	{
+		//! TODO: Do something with message
+		if(buff[0]) _ControllerState = 1;
+		else if(buff[1]) _ControllerState = 2;
+		else if(buff[2]) _ControllerState = 3;
+		else if(buff[3]) _ControllerState = 4;
+		else _ControllerState = 0;
+	}
 	else _ControllerState = 0;
 }

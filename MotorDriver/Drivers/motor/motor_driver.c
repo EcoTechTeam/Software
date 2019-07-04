@@ -79,6 +79,35 @@ void MTR_Init(void)
 	MTR_ADC_TIM->CR2 |= TIM_CR2_MMS_1;
 	MTR_ADC_TIM->CR1 |= TIM_CR1_CEN;
 
+	/*!
+	 * MTR_IIN = GPIOA_PIN_1
+	 *
+	 * CNF1		CNF0	MODE1	MODE0	ODR
+	 * 0		0		0		0		0
+	 *
+	 * Analog mode
+	 */
+	ADC_GPIO->CRL &= ~(GPIO_CRL_MODE1 | GPIO_CRL_CNF1);
+
+	VIN_ADC->CR1 |= ADC_CR1_AWDIE;
+	VIN_ADC->CR2 |= ADC_CR2_EXTTRIG | ADC_CR2_CONT | ADC_CR2_ADON;
+	VIN_ADC->SQR3 |= ADC_SQR3_SQ1_0;
+	VIN_ADC->SMPR2 |= ADC_SMPR2_SMP0;
+	//! Lower value set to 20V
+	//! VADC = 20 * 35k / (390k + 35k) = 1.677 V
+	//! ADC = 4095 * VADC / VDD = 2081
+	VIN_ADC->LTR = 2081;
+
+	//! Wait for two ADC clocks before calibration
+	i = 0xFFF;
+	while(i > 0) i--;
+	//! Calibrate ADC
+	VIN_ADC->CR2 |= ADC_CR2_CAL;
+	//! Watchdog should reset if calibration fails
+	while(VIN_ADC->CR2 & ADC_CR2_CAL);
+
+	VIN_ADC->CR2 |= ADC_CR2_ADON;
+
 	NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 	NVIC_EnableIRQ(ADC1_2_IRQn);
 }
@@ -140,6 +169,11 @@ void ADC1_2_IRQHandler(void)
 			_ON = true;
 		}
 		MTR_ADC->SR &= ~ADC_SR_AWD;
+	}
+	if(VIN_ADC->SR & ADC_SR_AWD)
+	{
+		MTR_UnderVoltage();
+		VIN_ADC->SR &= ~ADC_SR_AWD;
 	}
 }
 
