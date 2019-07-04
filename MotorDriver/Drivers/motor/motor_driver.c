@@ -94,9 +94,9 @@ void MTR_Init(void)
 	VIN_ADC->SQR3 |= ADC_SQR3_SQ1_0;
 	VIN_ADC->SMPR2 |= ADC_SMPR2_SMP0;
 	//! Lower value set to 20V
-	//! VADC = 20 * 35k / (390k + 35k) = 1.677 V
-	//! ADC = 4095 * VADC / VDD = 2081
-	VIN_ADC->LTR = 2081;
+	//! VADC = 20 * 33k / (390k + 33k) = 1.56 V
+	//! ADC = 4095 * VADC / VDD = 1936
+	VIN_ADC->LTR = 1936;
 
 	//! Wait for two ADC clocks before calibration
 	i = 0xFFF;
