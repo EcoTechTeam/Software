@@ -50,7 +50,7 @@ void SYS_Init(void)
 	IWDG->PR |= IWDG_PR_PR_0;
 	IWDG->KR = 0xAAAA;
 
-	SysTick_Config(720000);
+	SysTick_Config(72000);
 }
 
 

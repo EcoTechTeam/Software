@@ -18,11 +18,12 @@ uint16_t _AvgSample;
 uint32_t _Rotations;
 int16_t _Rpm;
 uint8_t _TableIndex;
-bool _Lock = false;
+uint8_t _Lock = 0;
 
 bool _MotorState = false;
 uint8_t _ControllerState;
 uint8_t _MessageTimer = 0;
+uint8_t _MainTimer = 0;
 
 
 const uint16_t _CurrentTable[118] = {2500, 2541, 2592, 2643, 2694, 2744, 2795, 2846, 2896, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947, 2947,
@@ -75,15 +76,19 @@ int main(void)
 			_AvgSample = acc / MTR_BUFFLEN;
 		}
 
-		if(!_ControllerState)
+		//! IF driver is not locked
+		if(!_Lock)
 		{
-			MTR_TurnOff();
-			_MotorState=false;
-		}
-		else if(!_MotorState)
-		{
-			MTR_TurnOn();
-			_MotorState=true;
+			if(!_ControllerState)
+			{
+				MTR_TurnOff();
+				_MotorState=false;
+			}
+			else if(!_MotorState)
+			{
+				MTR_TurnOn();
+				_MotorState=true;
+			}
 		}
 
 		//! TESTING PURPOSES!!!!
@@ -106,11 +111,11 @@ int main(void)
 			LED_SetLedOff(LED1);
 		}
 		else if(_ControllerState==4) //mapa fast
-				{
+		{
 			LED_SetLedOff(LED2);
 			LED_SetLedOff(LED3);
 			LED_SetLedOn(LED1);
-				}
+		}
 		else {
 			LED_SetLedOff(LED2);
 			LED_SetLedOff(LED3);
@@ -123,30 +128,39 @@ int main(void)
 //! Systick handler called in interrupt
 void SYS_Tick(void)
 {
-	//! Read rpm value from encoder
-	_Rpm = ENC_ReadAndReset();
-	//! Calculate rpm to table index value
-	if(_Rpm >=0) _TableIndex = _Rpm / 40;
-	else _TableIndex = 0;
-	if(_TableIndex >= 118) _TableIndex = 117;
+	_MainTimer++;
+	if(_MainTimer >= 10)
+	{
+		_MainTimer = 0;
+		//! Read rpm value from encoder
+		_Rpm = ENC_ReadAndReset();
+		//! Calculate rpm to table index value
+		if(_Rpm >=0) _TableIndex = _Rpm / 40;
+		else _TableIndex = 0;
+		if(_TableIndex >= 118) _TableIndex = 117;
 
-	if(_ControllerState == 2) MTR_SetLimit(_CurrentTable2[_TableIndex]);
-	if(_ControllerState == 3) MTR_SetLimit(_CurrentTable3[_TableIndex]);
-	else MTR_SetLimit(_CurrentTable[_TableIndex]);
+		if(_ControllerState == 2) MTR_SetLimit(_CurrentTable2[_TableIndex]);
+		if(_ControllerState == 3) MTR_SetLimit(_CurrentTable3[_TableIndex]);
+		else MTR_SetLimit(_CurrentTable[_TableIndex]);
 
-	//! TODO: Handle events
-	if(_MessageTimer > 10)
-		_ControllerState=0;
-	else _MessageTimer++;
-	_Lock = false;
+		//! TODO: Handle events
+		if(_MessageTimer > 10)
+			_ControllerState=0;
+		else _MessageTimer++;
+	}
+
+	//! Lock driver for max 20ms
+	if(_Lock >= 2) _Lock = 0;
+	if(_Lock) _Lock++;
 }
 
 
 void MTR_UnderVoltage(void)
 {
+	//! Turn off and lock driver
 	MTR_TurnOff();
-	_ControllerState = 0;
-	_Lock = true;
+	_MotorState = false;
+	_Lock = 1;
 }
 
 
@@ -168,14 +182,10 @@ void ENC_FullRotation(void)
 void MSG_Received(uint8_t *buff, uint8_t len)
 {
 	_MessageTimer = 0;
-	if(!_Lock)
-	{
-		//! TODO: Do something with message
-		if(buff[0]) _ControllerState = 1;
-		else if(buff[1]) _ControllerState = 2;
-		else if(buff[2]) _ControllerState = 3;
-		else if(buff[3]) _ControllerState = 4;
-		else _ControllerState = 0;
-	}
+	//! TODO: Do something with message
+	if(buff[0]) _ControllerState = 1;
+	else if(buff[1]) _ControllerState = 2;
+	else if(buff[2]) _ControllerState = 3;
+	else if(buff[3]) _ControllerState = 4;
 	else _ControllerState = 0;
 }

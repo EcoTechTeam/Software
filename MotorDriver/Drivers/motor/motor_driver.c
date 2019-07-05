@@ -121,6 +121,7 @@ void MTR_TurnOn(void)
 	MTR_ADC->HTR = 0xFFFF;
 	MTR_ADC->LTR = _LowLimit;
 	MTR_ADC->CR1 |= ADC_CR1_AWDEN;
+	VIN_ADC->CR1 |= ADC_CR1_AWDEN;
 }
 
 
@@ -128,6 +129,7 @@ void MTR_TurnOff(void)
 {
 	MTR_TIM->BDTR &= ~TIM_BDTR_MOE;
 	MTR_ADC->CR1 &= ~ADC_CR1_AWDEN;
+	VIN_ADC->CR1 &= ~ADC_CR1_AWDEN;
 }
 
 
