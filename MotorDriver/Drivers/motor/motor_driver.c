@@ -137,6 +137,7 @@ void ADC1_2_IRQHandler(void)
 			MTR_TIM->CCR1 = MTR_TIM_ON;
 			MTR_ADC->HTR = 0xFFFF;
 			MTR_ADC->LTR = _LowLimit;
+
 			_ON = true;
 		}
 		MTR_ADC->SR &= ~ADC_SR_AWD;
